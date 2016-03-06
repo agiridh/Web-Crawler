@@ -35,6 +35,7 @@ def delete_file_content(path):
     with open(path, 'w'):
         pass
 
+
 # File I/O is a bottleneck in a program that crawls through thousands
 # of web pages. So, it is better to write those crawled website links to a set
 # this function stores each line of file in a set
