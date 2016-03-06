@@ -14,8 +14,8 @@ def create_file(file, data):
 # queue: consists of pages that have not been crawled
 # crawled: consists of pages that have already been crawled
 def create_data_files(project_name, base_url):
-    queue = project_name + "queue.txt"
-    crawled = project_name + "crawled.txt"
+    queue = project_name + "/queue.txt"
+    crawled = project_name + "/crawled.txt"
     if not os.path.isfile(queue):
         create_file(queue, base_url)
     if not os.path.isfile(crawled):
