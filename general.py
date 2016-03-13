@@ -21,7 +21,7 @@ def create_data_files(project_name, base_url):
     if not os.path.isfile(queue):
         create_file(queue, base_url)
     if not os.path.isfile(crawled):
-        create_file(crawled, base_url)
+        create_file(crawled, '')
 
 
 # Add another link to existing file
@@ -39,10 +39,11 @@ def delete_file_content(path):
 # File I/O is a bottleneck in a program that crawls through thousands
 # of web pages. So, it is better to write those crawled website links to a set
 # this function stores each line of file in a set
+# rt stands for read text file
 def add_filelines_to_set(file):
+    results = set()
     with open(file, 'rt') as f:
-        results = set()
-        for line in file:
+        for line in f:
             results.add(line.replace("\n", ""))
 
     return results
