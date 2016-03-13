@@ -13,4 +13,26 @@ QUEUE_FILE = PROJECT_NAME + '/queue.txt'
 CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
 NUMBER_OF_THREADS = 7
 queue = Queue()
+
+# Run the first Worker/Spider
 Spider(HOMEPAGE, DOMAIN_NAME, PROJECT_NAME)
+
+
+
+# Each queued link is a new job
+def create_jobs():
+    for link in add_filelines_to_set(QUEUE_FILE):
+        queue.put(link)
+    queue.join()  # when there are jobs available, no two threads fight to get the same job
+    crawl()
+
+
+# Check if there are items in queue.txt, if so, crawl em
+def crawl():
+    queued_links = add_filelines_to_set(QUEUE_FILE)
+    if len(queued_links) > 0:
+        print("There are {} links in the queue.".format(str(len(queued_links))))
+        create_jobs()
+
+
+
