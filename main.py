@@ -1,3 +1,8 @@
+## author: Aditya Giridhar
+## This is a command line tool that crawls through all the links on a website
+## More functionality could be added to this - some sort of data analytics maybe?
+## Call syntax: python3 main.py
+
 import threading
 from queue import Queue
 from spider import Spider
@@ -5,23 +10,21 @@ from general import *
 from domain import *
 
 
-# constants
-PROJECT_NAME = 'thenewboston'
-HOMEPAGE = 'https://www.thenewboston.com'
-DOMAIN_NAME = get_domain_name(HOMEPAGE)
-QUEUE_FILE = PROJECT_NAME + '/queue.txt'
-CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
-NUMBER_OF_THREADS = 7
-queue = Queue()
 
-# Run the first Worker/Spider
-Spider(HOMEPAGE, DOMAIN_NAME, PROJECT_NAME)
+
+def get_user_input():
+    project_name = input("Enter name of project: ")
+    homepage = input("Enter complete url of the homepage: ")
+    number_of_threads = int(input("Enter the number of threads to use: "))
+    domain_name = get_domain_name(homepage)
+
+    return homepage, domain_name, project_name, number_of_threads
 
 
 # Create worker threads
 # The argument related to the target is what the worker is supposed to do
-def create_workers():
-    for _ in range(NUMBER_OF_THREADS):
+def create_workers(number_of_threads):
+    for _ in range(number_of_threads):
         t = threading.Thread(target=work)
         t.daemon = True  # will die when main exits
         t.start()  # ask worker to start doing work
@@ -36,19 +39,30 @@ def work():
 
 
 # Each queued link is a new job
-def create_jobs():
-    for link in add_filelines_to_set(QUEUE_FILE):
+def create_jobs(queue_file):
+    for link in add_filelines_to_set(queue_file):
         queue.put(link)
     queue.join()  # when there are jobs available, no two threads fight to get the same job
-    crawl()
+    crawl(queue_file)
 
 
 # Check if there are items in queue.txt, if so, crawl em
-def crawl():
-    queued_links = add_filelines_to_set(QUEUE_FILE)
+def crawl(queue_file):
+    queued_links = add_filelines_to_set(queue_file)
     if len(queued_links) > 0:
         print("There are {} links in the queue.".format(str(len(queued_links))))
-        create_jobs()
+        create_jobs(queue_file)
 
-create_workers()
-crawl()
+
+if __name__ == '__main__':
+
+    homepage, domain_name, project_name, number_of_threads = get_user_input()
+    queue_file = project_name + '/queue.txt'
+    crawled_file = project_name + '/crawled.txt'
+    queue = Queue()
+
+    # Run the first Worker/Spider
+    Spider(homepage, domain_name, project_name)
+
+    create_workers(number_of_threads)
+    crawl(queue_file)
