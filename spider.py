@@ -1,6 +1,14 @@
 from urllib.request import urlopen
 from link_finder import LinkFinder
 from general import *
+import requests
+
+
+##############
+# NOTE: Found that in gather_links function
+# using requests.get(url) to get html of a website works
+# better than urlopen from the urllib.request module
+##############
 
 
 class Spider:
@@ -58,10 +66,11 @@ class Spider:
         html_string = ''
 
         try:
-            response = urlopen(page_url)  # make sure we are connecting to an actual website
-            if response.getheader('Content-Type') == 'text/html':
-                html_bytes = response.read()
-                html_string = html_bytes.decode('utf-8')
+            #response = urlopen(page_url)  # make sure we are connecting to an actual website
+            #if response.getheader('Content-Type') == 'text/html':
+            #    html_bytes = response.read()
+            #    html_string = html_bytes.decode('utf-8')
+            html_string = requests.get(page_url).text
             finder = LinkFinder(Spider.base_url, page_url)
             finder.feed(html_string)
 
