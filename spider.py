@@ -72,6 +72,25 @@ class Spider:
         return finder.get_page_links()
 
 
+    @staticmethod
+    def add_links_to_queue(links):
+
+        for url in links:
+            if url in Spider.queue:
+                continue
+            if url in Spider.crawled:
+                continue
+            # if there are links to other websites - YouTube or Facebook..etc, don't crawl them
+            if Spider.domain_name not in url:
+                continue
+            Spider.queue.add(url)
+
+
+    @staticmethod
+    def update_files():
+        writing_set_to_file(Spider.queue, Spider.queue_file)
+        writing_set_to_file(Spider.crawled, Spider.crawled_file)
+
 
 
 
