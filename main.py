@@ -11,7 +11,6 @@ from domain import *
 
 
 
-
 def get_user_input():
     project_name = input("Enter name of project: ")
     homepage = input("Enter complete url of the homepage: ")
