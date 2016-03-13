@@ -10,10 +10,12 @@ class LinkFinder(HTMLParser):
         self.links = set()  # contains all the links parsed by the crawler on a particular page
 
 
+
     def error(self, message):
         pass
 
 
+    # When we call HTMLParser feed(), this function is called
     # In <a href = "https://www.google.com/images">, a: html tag, href: attribute, value: https://www.google.com
     # if the html tag is <a>, and if href is the attribute, add link to set
     # sometimes, href only has a relative url like: /images
