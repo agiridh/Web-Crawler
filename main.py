@@ -18,6 +18,15 @@ queue = Queue()
 Spider(HOMEPAGE, DOMAIN_NAME, PROJECT_NAME)
 
 
+# Create worker threads
+# The argument related to the target is what the worker is supposed to do
+def create_workers():
+    for _ in range(NUMBER_OF_THREADS):
+        t = threading.Thread(target=work)
+        t.daemon = True  # will die when main exits
+        t.start()
+
+
 
 # Each queued link is a new job
 def create_jobs():
@@ -28,7 +37,7 @@ def create_jobs():
 
 
 # Check if there are items in queue.txt, if so, crawl em
-def crawl():
+def crawl():crea
     queued_links = add_filelines_to_set(QUEUE_FILE)
     if len(queued_links) > 0:
         print("There are {} links in the queue.".format(str(len(queued_links))))
