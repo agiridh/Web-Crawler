@@ -24,8 +24,15 @@ def create_workers():
     for _ in range(NUMBER_OF_THREADS):
         t = threading.Thread(target=work)
         t.daemon = True  # will die when main exits
-        t.start()
+        t.start()  # ask worker to start doing work
 
+
+# Do next job in queue
+def work():
+    while True:
+        url = queue.get()  # get url from queue.txt
+        Spider.crawl_page(threading.current_thread().name, url)
+        queue.task_done()  # end task for worker. It can now find more jobs, if available
 
 
 # Each queued link is a new job
@@ -37,11 +44,11 @@ def create_jobs():
 
 
 # Check if there are items in queue.txt, if so, crawl em
-def crawl():crea
+def crawl():
     queued_links = add_filelines_to_set(QUEUE_FILE)
     if len(queued_links) > 0:
         print("There are {} links in the queue.".format(str(len(queued_links))))
         create_jobs()
 
-
-
+create_workers()
+crawl()
